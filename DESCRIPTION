@@ -1,19 +1,16 @@
 Package: gencor
 Type: Package
 Title: Generate Customized Correlation Matrices
-Version: 1.0.0
+Version: 1.0.1
 Depends:
     base,
 Author: Helgem de Souza Ribeiro Martins[aut, cre], Anderson Ribeiro Duarte[aut]
 Maintainer: Helgem de Souza Ribeiro Martins <helgem.souza@gmail.com>
-Description: Provides a function that generates customized correlation matrix based on 
-    limit values and proportions for intervals composed by its limits. Can also generate 
-    random correlation matrices, matrices with low, medium and high correlations, which 
-    low, medium and high thresholds are user-defined.
+Description: Provides a function that generates a customized correlation matrix based on limit values and proportions for intervals composed by its limits. It can also generate random matrices with low, medium, and high correlations, in which low, medium, and high thresholds are user-defined.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Suggests: 
     testthat (>= 3.0.0)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 Config/testthat/edition: 3
