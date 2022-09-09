@@ -26,18 +26,48 @@
 #' @param sort_intensity Sorts the correlation matrix by intensity.
 #' @param random_liminf Sets the lower limit of uniform distribution that generates the standard deviations used in random correlation matrix generation. Must be greater than zero due to convergence problems.
 #' @param seed Enables seed definition.
+#' 
+#' @return \code{gencor(...)} returns an object of class "gencor" with a list of the following objects:
+#' \itemize{
+#' 
+#' \item Matrix - The generated correlation matrix.
+#' \item Method - The method used in generation
+#' \item Proportions - The observed proportions at each level. The levels are given by default or user defined.
+#' \item Runtime - Ellapsed simulation time
+#' \item Nsim - Number of iterations needed to achieve the desired correlation matrix. 0 if the chosen method was "random".
+#' \item Precision - The precision used on the  optimization method.
+#' \item Dimension - The dimension of the generated correlation matrix.
+#' \item Sdev - Vector of standard deviations used in generation process.
+#' \item Custom_propp - User defined proportions in custom method. NULL if the chosen method was random.
+#' \item custom_lim - User defined correlation limits in custom method. NULL if the chosen method was random.
+#' \item Signal - Type of signal generation defined by the user, "random" by default.
+#' \item Nrep - Size of simulated data matrix used in correlation matrix generation.
+#' \item Generated data - Simulated data used in the generation process.
+#' 
+#' }
+#' 
+#' 
 #' @details This method generates correlation matrices based on the correlations among normal random variables with mean 0 and specified standard deviation values. These specified standard deviation values make possible the control of the correlation coefficient intensity.
 #'
 #' @examples
 #'
+#' ## Generates a random correlation matrix with dimension 10
 #' gencor()
 #'
+#' ## Generates a correlation matrix with correlations below 0.3 
 #' gencor(15, method = "low", lim_low = 0.3)
 #'
+#' ## Generates a correlation matrix with correlations between 0.3 and 0.7
 #' gencor(15, method = "medium", lim_low = 0.3, lim_medium = 0.7)
-#'
+#' 
+#' ## Generates a correlation matrix with correlations above 0.7
 #' gencor(30, method = "high", lim_medium = 0.75)
-#'
+#' 
+#' ## Generates a custom correlation matrix with: 
+#' ## - 30% of values below 0.2, 
+#' ## - 30% of values between 0.2 and 0.5,
+#' ## - 20% of values between 0.5 and 0.8,
+#' ## - 20% of values above 0.8
 #' gencor(20, method = "custom", custom_lim = c(0.2, 0.5, 0.8), custom_prop = c(0.3, 0.3, 0.2, 0.2))
 #'
 #'
@@ -79,7 +109,7 @@ gencor <- function(d = 10,
     return(runif(n, sqrt((1/lim[2])-1), sqrt((1/(lim[1]))-1)))
 
   }
-
+ 
   #Generate correlation matrix based on defined limits
   gen_cor <- function(x, sdev, custom_signal = "random"){
 
@@ -90,13 +120,9 @@ gencor <- function(d = 10,
 
     if(custom_signal == 'random'){
 
-      #sig <- diag(sample(c(-1, 1), length(sdev), replace = T))
-      #sig <- matrix(rep(sample(c(-1, 1), length(sdev), replace = T), each = nsim), ncol = length(sdev))
-      #k <- sample(c(-1, 1), length(sdev), replace = T)
-      prop_sig <- runif(1, 0, 1)
-      #prop_sig <- runif(1, 0.2, 0.8)
-      #prop_sig <- pnorm(rnorm(1, 0, 1))
-      vetsig <- c(rep(1, ceiling(prop_sig*length(sdev))), rep(-1, ceiling((1-prop_sig)*length(sdev))))
+      np <- round((length(sdev) + sqrt(length(sdev)))/2)
+      vetsig <- c(rep(1, np), 
+                  rep(-1, (length(sdev) - np)))
       k <- sample(vetsig, size = length(sdev), replace = F)
       sig <- do.call("rbind",
                      replicate(nsim, rbind(k), simplify = FALSE))
