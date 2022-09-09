@@ -58,6 +58,26 @@ gencor(
 
 \item{seed}{Enables seed definition.}
 }
+\value{
+\code{gencor(...)} returns an object of class "gencor" with a list of the following objects:
+\itemize{
+
+\item Matrix - The generated correlation matrix.
+\item Method - The method used in generation
+\item Proportions - The observed proportions at each level. The levels are given by default or user defined.
+\item Runtime - Ellapsed simulation time
+\item Nsim - Number of iterations needed to achieve the desired correlation matrix. 0 if the chosen method was "random".
+\item Precision - The precision used on the  optimization method.
+\item Dimension - The dimension of the generated correlation matrix.
+\item Sdev - Vector of standard deviations used in generation process.
+\item Custom_propp - User defined proportions in custom method. NULL if the chosen method was random.
+\item custom_lim - User defined correlation limits in custom method. NULL if the chosen method was random.
+\item Signal - Type of signal generation defined by the user, "random" by default.
+\item Nrep - Size of simulated data matrix used in correlation matrix generation.
+\item Generated data - Simulated data used in the generation process.
+
+}
+}
 \description{
 This method generates custom correlation matrices based on user-defined limits and/or proportions.
 }
@@ -66,14 +86,23 @@ This method generates correlation matrices based on the correlations among norma
 }
 \examples{
 
+## Generates a random correlation matrix with dimension 10
 gencor()
 
+## Generates a correlation matrix with correlations below 0.3 
 gencor(15, method = "low", lim_low = 0.3)
 
+## Generates a correlation matrix with correlations between 0.3 and 0.7
 gencor(15, method = "medium", lim_low = 0.3, lim_medium = 0.7)
 
+## Generates a correlation matrix with correlations above 0.7
 gencor(30, method = "high", lim_medium = 0.75)
 
+## Generates a custom correlation matrix with: 
+## - 30\% of values below 0.2, 
+## - 30\% of values between 0.2 and 0.5,
+## - 20\% of values between 0.5 and 0.8,
+## - 20\% of values above 0.8
 gencor(20, method = "custom", custom_lim = c(0.2, 0.5, 0.8), custom_prop = c(0.3, 0.3, 0.2, 0.2))
 
 
